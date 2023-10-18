@@ -1,7 +1,7 @@
-// server.js
-const express = require('express');
-const { MongoClient } = require('mongodb');
-const cors = require('cors');
+// server.mjs (Note the .mjs file extension for ES Modules)
+import express from 'express';
+import { MongoClient } from 'mongodb';
+import cors from 'cors';
 
 const app = express();
 const port = 5000;
