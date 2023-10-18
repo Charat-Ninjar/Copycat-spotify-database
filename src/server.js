@@ -1,29 +1,32 @@
-// server.mjs (Note the .mjs file extension for ES Modules)
-import express from 'express';
-import { MongoClient } from 'mongodb';
-import cors from 'cors';
-
+import express from 'express'
+import mongoose from 'mongoose'
+import cors from 'cors'
 const app = express();
-const port = 5000;
+const port = 5001;
 
-app.use(cors());
+app.use(cors())
 
-const uri = 'mongodb+srv://Jarjajarr:jar180ok@cluster0001.shllyge.mongodb.net/';
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+await mongoose.connect('mongodb+srv://Jarjajarr:jar180ok@cluster0001.shllyge.mongodb.net/spotify-clone')
+
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+
+const albumSchema = new Schema({
+  imgSrc: String,
+  title: String,
+  songCount: Number,
+});
+
+const albumsData = mongoose.model('album', albumSchema);
 
 app.get('/api/getData', async (req, res) => {
   try {
-    await client.connect();
-    const collection = client.db('spotify-clone').collection('album');
-    const query = {}; // Your query goes here
-    const data = await collection.find(query).toArray();
+    const data = await albumsData.find({})
     res.json(data);
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     res.status(500).json({ error: 'Failed to fetch data from MongoDB' });
-  } finally {
-    await client.close();
-  }
+  } 
 });
 
 app.listen(port, () => {
